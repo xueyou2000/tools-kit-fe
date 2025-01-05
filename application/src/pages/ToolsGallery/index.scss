@@ -4,6 +4,7 @@
   position: relative;
   min-height: 100vh;
   padding: 2rem;
+  isolation: isolate;
   transition: all 0.3s ease-out;
 
   .page-title {
@@ -12,8 +13,8 @@
     text-shadow: 0 2px 8px rgb(0 0 0 / 8%);
     background: linear-gradient(45deg, #f36 0%, #ff6b6b 25%, #4ecdc4 50%, #45b8ac 75%, #2ab7ca 100%);
     background-clip: text;
-    -webkit-text-fill-color: transparent;
     animation: hue-rotate 6s linear infinite;
+    -webkit-text-fill-color: transparent;
   }
 
   @keyframes hue-rotate {
@@ -28,15 +29,29 @@
 
   &::before {
     position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 0;
-    height: 240px;
-    background: linear-gradient(135deg, var(--accent-9) 0%, var(--accent-10) 100%);
-    opacity: 0.1;
-    transition: all 0.3s ease-out;
+    z-index: -1;
+    background: linear-gradient(135deg, var(--accent-a2) 0%, transparent 50%, var(--accent-a2) 100%);
+    opacity: 0.8;
     content: '';
+    inset: 0;
+
+    @media (prefers-color-scheme: dark) {
+      background: linear-gradient(135deg, var(--accent-a3) 0%, transparent 50%, var(--accent-a3) 100%);
+    }
+  }
+
+  &::after {
+    position: absolute;
+    z-index: -1;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--accent-a3) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    content: '';
+    inset: 0;
+  }
+
+  &:hover::after {
+    opacity: 0.8;
   }
 
   > * {
@@ -49,7 +64,15 @@
   }
 
   .tools-gallery-card {
-    box-shadow: 0 4px 20px rgb(0 0 0 / 4%);
+    background: color-mix(in srgb, var(--color-background) 97%, transparent);
+    border: 1px solid var(--gray-a4);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--accent-a6);
+      transform: translateY(-2px);
+    }
   }
 
   .tool-link {

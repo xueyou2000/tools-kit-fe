@@ -5,15 +5,33 @@
   right: 24px;
   bottom: 24px;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
-  .scroll-to-top-btn {
-    margin-top: 8px;
-    background-color: var(--background-paper);
-    border: 1px solid var(--divider);
+  .scroll-top {
+    height: 0;
+    margin: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.3s ease,
+      visibility 0.3s ease,
+      height 0.3s ease,
+      margin 0.3s ease;
 
-    &:hover {
-      background-color: var(--action-hover);
+    &[data-show='true'] {
+      height: 35px;
+      transform: translateY(0);
+      visibility: visible;
+      opacity: 1;
     }
+  }
+
+  .settings-trigger {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -45,7 +63,16 @@
   }
 
   .scroll-top {
-    // 移除 margin-top，因为我们使用了 gap
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 0.3s,
+      visibility 0.3s;
+
+    &.visible {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 }
 

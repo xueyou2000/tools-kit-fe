@@ -29,9 +29,9 @@ interface FormatOptions {
 
 const defaultOptions: FormatOptions = {
   indent: '2space',
-  maxLineLength: '80',
+  maxLineLength: '120',
   braceStyle: 'collapse',
-  semi: true,
+  semi: false,
   singleQuote: true,
   trailingComma: 'es5',
   arrowParens: 'always',
@@ -133,6 +133,7 @@ export default function JsFormatter() {
                     <Select.Item value='no'>不换行</Select.Item>
                     <Select.Item value='80'>80 字符换行</Select.Item>
                     <Select.Item value='120'>120 字符换行</Select.Item>
+                    <Select.Item value='160'>160 字符换行</Select.Item>
                   </Select.Content>
                 </Select.Root>
               </Flex>
