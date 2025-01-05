@@ -13,6 +13,8 @@ jobs:
       matrix:
         platform: [macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
+    permissions: # 添加权限声明
+      contents: write
     steps:
       - uses: actions/checkout@v3
 
@@ -38,14 +40,12 @@ jobs:
       - name: Build
         run: pnpm tauri build
 
-      # 添加上传构建产物步骤
+      # 修复上传构建产物步骤
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform }}
-          path: |
-            src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/msi/*.msi
+          path: ${{ matrix.platform == 'macos-latest' && 'src-tauri/target/release/bundle/dmg/*.dmg' || 'src-tauri/target/release/bundle/msi/*.msi' }}
 
       # 添加创建 Release 步骤
       - name: Create Release
@@ -53,7 +53,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/msi/*.msi
+            ${{ matrix.platform == 'macos-latest' && 'src-tauri/target/release/bundle/dmg/*.dmg' || 'src-tauri/target/release/bundle/msi/*.msi' }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
