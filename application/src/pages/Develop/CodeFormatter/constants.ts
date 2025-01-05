@@ -1,4 +1,4 @@
-export type SupportedLanguage = 'javascript' | 'typescript' | 'css' | 'scss' | 'json' | 'html'
+export type SupportedLanguage = 'javascript' | 'typescript' | 'css' | 'scss' | 'json' | 'html' | 'yaml' | 'markdown'
 
 export interface FormatOptions {
   language: SupportedLanguage

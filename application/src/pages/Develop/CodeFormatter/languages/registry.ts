@@ -6,14 +6,12 @@ class LanguageRegistry {
   private processors = new Map<SupportedLanguage, LanguageProcessor>()
 
   register(language: SupportedLanguage, processor: LanguageProcessor) {
-    console.log('register', language, processor)
     if (!this.processors.has(language)) {
       this.processors.set(language, processor)
     }
   }
 
   getProcessor(language: SupportedLanguage): LanguageProcessor {
-    console.log('getProcessor', language)
     const processor = this.processors.get(language)
     if (!processor) {
       throw new Error(`No processor registered for language: ${language}`)

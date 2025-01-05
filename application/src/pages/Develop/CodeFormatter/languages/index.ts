@@ -5,6 +5,8 @@ import { CSSProcessor } from './css'
 import { SCSSProcessor } from './scss'
 import { JSONProcessor } from './json'
 import { HTMLProcessor } from './html'
+import { YAMLProcessor } from './yaml'
+import { MarkdownProcessor } from './markdown'
 
 export { languageRegistry }
 
@@ -16,4 +18,6 @@ export function registerAll() {
   languageRegistry.register('scss', SCSSProcessor.getInstance())
   languageRegistry.register('json', JSONProcessor.getInstance())
   languageRegistry.register('html', HTMLProcessor.getInstance())
+  languageRegistry.register('yaml', YAMLProcessor.getInstance())
+  languageRegistry.register('markdown', MarkdownProcessor.getInstance())
 }

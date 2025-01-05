@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
-import CodeMirror from '@uiw/react-codemirror'
-import { placeholder, EditorView } from '@codemirror/view'
+import CodeMirror, { Transaction } from '@uiw/react-codemirror'
+import { placeholder, EditorView, ViewUpdate } from '@codemirror/view'
 import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode'
 import { SupportedLanguage } from '../constants'
 import { detectLanguage } from '../utils/languageDetector'
@@ -20,22 +20,23 @@ export function CodeEditor({ code, language, theme, onChange }: CodeEditorProps)
   }, [currentProcessor])
 
   const handleChange = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (value: string, viewUpdate: any) => {
-      // 检查是否是粘贴操作
-      if (viewUpdate.changes.inserted.length >= 1) {
-        const detectedLang = detectLanguage(value)
+    (value: string, viewUpdate: ViewUpdate) => {
+      let detectedLang = language
 
-        // 将光标移到开始位置并滚动到顶部
-        viewUpdate.view.dispatch({
-          selection: { anchor: 0, head: 0 },
-          effects: EditorView.scrollIntoView(0)
-        })
-
-        onChange(value, detectedLang)
-      } else {
-        onChange(value, language)
+      // 查找所有来自用户的事务，并检查是否有"input.paste"注解
+      for (const tr of viewUpdate.transactions) {
+        if (tr.annotation(Transaction.userEvent) === 'input.paste') {
+          detectedLang = detectLanguage(value)
+          // 将光标移到开始位置并滚动到顶部
+          const newState = viewUpdate.state.update({
+            selection: { anchor: 0, head: 0 },
+            effects: EditorView.scrollIntoView(0)
+          })
+          viewUpdate.view.dispatch(newState)
+        }
       }
+
+      onChange(value, detectedLang)
     },
     [language, onChange]
   )
