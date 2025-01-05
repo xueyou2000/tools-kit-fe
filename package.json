@@ -14,7 +14,10 @@
     "lint:stylelint": "stylelint ./**/*.{scss,css,less,sass}",
     "lint": "npm run lint:eslint && npm run lint:stylelint",
     "dev": "turbo dev --log-prefix=none",
-    "build": "turbo build --log-prefix=none"
+    "build": "turbo build --log-prefix=none",
+    "preview": "turbo preview --log-prefix=none",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "files": [
     "lib",
@@ -75,6 +78,7 @@
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@framework/lint-set": "workspace:^",
+    "@tauri-apps/cli": "^2.2.2",
     "@types/node": "^22.10.5",
     "branchlint": "^0.0.2",
     "husky": "^9.1.7",
@@ -84,6 +88,7 @@
     "turbo": "^2.3.3"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.2.0",
     "typescript": "^5.7.2"
   }
 }

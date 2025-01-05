@@ -16,6 +16,7 @@
     "lint": "npm run lint:eslint && npm run lint:stylelint",
     "dev": "env-cmd -e dev -r ./envs.js rsbuild dev -c ./build/rsbuild.dev.config.ts",
     "build": "env-cmd -e prod -r ./envs.js rsbuild build -c ./build/rsbuild.prod.config.ts",
+    "preview": "env-cmd -e prod -r ./envs.js rsbuild preview",
     "inspect": "env-cmd -e prod -r ./envs.js rsbuild inspect -c ./build/rsbuild.prod.config.ts",
     "analyze": "env-cmd -e prod -r ./envs.js cross-env RSDOCTOR=1 rsbuild build -c ./build/rsbuild.prod.config.ts"
   },
