@@ -3,6 +3,13 @@
 > 注意 `lint-staged` 只会检查 git 暂存区(staged)的文件，而不是所有文件。如果历史文件有lint错误，请手动执行`npm run lint`
 > 并且 `lint-staged` 会自动尝试修复代码, 比如格式化
 
+当你要发布新版本时，创建并推送一个新的 tag：
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
 ## 项目结构
 
 - application: 应用
@@ -20,7 +27,7 @@
 
 在 ~/.cargo/config 或 %USERPROFILE%\.cargo\config.toml 文件(没有后缀名)中添加以下配置：
 
-```txt
+```toml
 [source.crates-io]
 replace-with = 'rsproxy'
 
