@@ -2,6 +2,7 @@ import { StrictMode, useLayoutEffect, memo } from 'react'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { Theme } from '@radix-ui/themes'
+import { Toaster } from 'sonner'
 
 import { assetPrefix } from '@/constants/env'
 import { routes } from '@/routes/routes'
@@ -15,8 +16,9 @@ import '@/assets/styles/themes/index.scss'
 function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { theme } = useAppContext()
   return (
-    <Theme appearance={theme} accentColor="cyan" grayColor="gray" scaling="100%">
+    <Theme appearance={theme} accentColor='cyan' grayColor='gray' scaling='100%'>
       {children}
+      <Toaster theme={theme} richColors />
     </Theme>
   )
 }

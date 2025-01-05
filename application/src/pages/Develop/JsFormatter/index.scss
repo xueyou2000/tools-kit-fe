@@ -1,5 +1,57 @@
 @use '@/assets/styles/mixins' as *;
 
 .js-formatter-page {
-  color: var(--text-primary);
+  height: 100%;
+}
+
+.js-formatter-content {
+  height: 100%;
+
+  // 让卡片占满剩余空间
+  > [data-radix-card-wrapper]:last-child {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    > div {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+  }
+}
+
+.format-options {
+  [data-radix-select-trigger] {
+    min-width: 120px;
+  }
+}
+
+.editor-wrapper {
+  position: relative;
+  flex: 1;
+  min-height: 300px;
+  overflow: hidden;
+  background-color: var(--gray-a2);
+  border-radius: var(--radius-3);
+
+  .cm-editor {
+    height: 100%;
+
+    // 确保编辑区域有最小高度
+    .cm-scroller {
+      min-height: 280px;
+      padding: var(--space-2);
+    }
+
+    // 自定义 placeholder 样式
+    .cm-placeholder {
+      color: var(--gray-a8);
+    }
+
+    // 让内容区域占满容器
+    .cm-content {
+      min-height: 280px;
+    }
+  }
 }

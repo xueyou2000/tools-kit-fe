@@ -5,13 +5,25 @@
   right: 24px;
   bottom: 24px;
   z-index: 1000;
+
+  .scroll-to-top-btn {
+    margin-top: 8px;
+    background-color: var(--background-paper);
+    border: 1px solid var(--divider);
+
+    &:hover {
+      background-color: var(--action-hover);
+    }
+  }
 }
 
 // 设置 Popover 内容样式
 .settings-content {
-  box-shadow:
-    hsl(206deg 22% 7% / 35%) 0 10px 38px -10px,
-    hsl(206deg 22% 7% / 20%) 0 10px 20px -15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
@@ -30,6 +42,10 @@
       transform: translateY(0);
       opacity: 1;
     }
+  }
+
+  .scroll-top {
+    // 移除 margin-top，因为我们使用了 gap
   }
 }
 

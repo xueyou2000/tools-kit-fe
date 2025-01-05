@@ -1,0 +1,20 @@
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: var(--space-3);
+  background: hsl(0deg 0% 100% / 80%);
+  border-bottom: 1px solid var(--gray-a5);
+  backdrop-filter: blur(6px);
+
+  &-back {
+    margin-right: var(--space-1);
+  }
+}
+
+[data-theme='dark'] {
+  .page-header {
+    background: linear-gradient(0deg, rgb(255 255 255 / 30%), rgb(255 255 255 / 30%)),
+      linear-gradient(0deg, rgb(0 0 0 / 40%), rgb(0 0 0 / 40%));
+  }
+}

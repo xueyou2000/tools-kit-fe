@@ -25,9 +25,10 @@ const appContextStore = create<AppContextState>()(
       },
       initializeTheme: () => {
         const { hasUserPreference, initialized } = get()
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+        const theme = darkModeMediaQuery.matches ? 'dark' : 'light'
+        document.documentElement.setAttribute('data-theme', theme)
         if (!hasUserPreference && !initialized) {
-          const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-          const theme = darkModeMediaQuery.matches ? 'dark' : 'light'
           set({ theme, initialized: true })
         }
       }
