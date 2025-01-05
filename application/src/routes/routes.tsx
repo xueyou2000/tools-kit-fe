@@ -18,8 +18,8 @@ export const routes: RouteObject[] = [
         path: 'develop',
         children: [
           {
-            path: 'js-formatter',
-            lazy: () => import(/* webpackChunkName: "JsFormatter" */ '../pages/Develop/JsFormatter')
+            path: 'code-formatter',
+            lazy: () => import(/* webpackChunkName: "CodeFormatter" */ '../pages/Develop/CodeFormatter')
           }
         ]
       }
