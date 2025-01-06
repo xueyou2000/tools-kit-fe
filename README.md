@@ -135,6 +135,9 @@ export APPLE_PASSWORD=your_apple_password
 export APPLE_TEAM_ID=your_apple_team_id
 ```
 
+> 重要，一定不能使用主密码，要使用专用密码。
+> 登录 https://account.apple.com/account/, 生成 App 专用密码
+
 你可以通过以下命令将 .p12 证书文件转换为 base64 编码字符串：
 
 ```bash

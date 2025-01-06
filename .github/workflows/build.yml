@@ -75,25 +75,25 @@ jobs:
           export TAURI_BUNDLE_MACOS_SIGNING_IDENTITY="$APPLE_ID"
           pnpm tauri build
 
-      - name: Notarize DMG
-        if: matrix.platform == 'macos-latest'
-        env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          NOTARY_PROFILE: xueyou-profile
-        run: |
-          sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
-          xcrun notarytool store-credentials "$NOTARY_PROFILE" --apple-id "$APPLE_ID" --password "$APPLE_ID_PASSWORD" --team-id "$APPLE_TEAM_ID"
-          DMG_PATH=$(find src-tauri/target/release/bundle/dmg/ -name "*.dmg")
-          if [ -z "$DMG_PATH" ]; then
-            echo "No DMG file found."
-            exit 1
-          fi
-          echo "Found DMG file at: $DMG_PATH"
-          xcrun notarytool submit "$DMG_PATH" --keychain-profile "$NOTARY_PROFILE"
-          xcrun stapler staple "$DMG_PATH"
-          echo "Stapling complete for $DMG_PATH."
+      # - name: Notarize DMG
+      #   if: matrix.platform == 'macos-latest'
+      #   env:
+      #     APPLE_ID: ${{ secrets.APPLE_ID }}
+      #     APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+      #     APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      #     NOTARY_PROFILE: xueyou-profile
+      #   run: |
+      #     sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+      #     xcrun notarytool store-credentials "$NOTARY_PROFILE" --apple-id "$APPLE_ID" --password "$APPLE_ID_PASSWORD" --team-id "$APPLE_TEAM_ID"
+      #     DMG_PATH=$(find src-tauri/target/release/bundle/dmg/ -name "*.dmg")
+      #     if [ -z "$DMG_PATH" ]; then
+      #       echo "No DMG file found."
+      #       exit 1
+      #     fi
+      #     echo "Found DMG file at: $DMG_PATH"
+      #     xcrun notarytool submit "$DMG_PATH" --keychain-profile "$NOTARY_PROFILE"
+      #     xcrun stapler staple "$DMG_PATH"
+      #     echo "Stapling complete for $DMG_PATH."
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
