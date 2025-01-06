@@ -1,8 +1,6 @@
 name: Build
 on:
   push:
-    branches:
-      - main
     # 添加 tags 触发器
     tags:
       - "v*"
