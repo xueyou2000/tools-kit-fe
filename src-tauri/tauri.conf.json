@@ -29,9 +29,9 @@
         "language": "zh-CN"
       }
     },
-    "macos": {
-      "signingIdentity": "./mycert.p12",
-      "certificatePassword": "${TAURI_CERTIFICATE_PASSWORD}"
+    "macOS": {
+      "signingIdentity": "6031F5E66C64E86E5CB1DBA2EB07D346BCB2855B",
+      "minimumSystemVersion": "10.13"
     },
     "active": true,
     "targets": "all",

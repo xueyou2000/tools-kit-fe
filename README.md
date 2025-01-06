@@ -90,6 +90,7 @@ openssl req -new -key mykey.key -out mycert.csr
 ```bash
 openssl req -new -key mykey.key -out mycert.csr
 ```
+
 4. 生成自签名证书：使用 CSR 和私钥创建一个自签名证书。
 
 ```bash
@@ -103,23 +104,39 @@ openssl x509 -req -days 365 -in mycert.csr -signkey mykey.key -out mycert.crt
 ```bash
 openssl pkcs12 -export -out mycert.p12 -inkey mykey.key -in mycert.crt
 ```
+
 6. 导入证书：双击生成的 .p12 文件以将其添加到系统的钥匙串（Keychain Access）中。选择“登录”钥匙串，并确保它被标记为“始终信任”。
 
-7. 配置 Tauri 项目：在 Tauri 项目的 tauri.conf.json 文件中，添加或修改以下配置：
+Tauri 开发开的ap ，打包后，如果不进行验证，每次安装后打开，都会提示 App已经损坏，虽然可以通过命令（ xattr -c /Applications/appname.app）解决，但是体验不好
 
-```json
-{
-  "build": {
-    "distDir": "../dist",
-    "devPath": "http://localhost:4000",
-    "beforeDevCommand": "",
-    "beforeBuildCommand": "",
-    "macos": {
-      "signingIdentity": "path/to/your/certificate.p12",
-      "certificatePassword": "your-p12-password",
-      // or 使用环境变量
-      "certificatePassword": "${TAURI_CERTIFICATE_PASSWORD}"
-    }
-  }
-}
+在 macOS 上，App 公正 分两种:
+一种是 在App Store 中的，
+一种是在App Store 外的
+
+> App 公正(notarize) 前要签名, 第二种方式我们用 Developer ID Application 签名
+
+查看signingIdentity,
+
+```bash
+security find-identity -v -p codesigning
+```
+
+将 `A03FAxxx...` 替换为你的 signingIdentity
+
+此时在运行编译，会只有一个警告
+
+> Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+
+然后需要设置环境变量用于公证 Notarizing
+
+```bash
+export APPLE_ID=your_apple_id
+export APPLE_PASSWORD=your_apple_password
+export APPLE_TEAM_ID=your_apple_team_id
+```
+
+你可以通过以下命令将 .p12 证书文件转换为 base64 编码字符串：
+
+```bash
+base64 -i your-certificate.p12 -o certificate-base64.txt
 ```
