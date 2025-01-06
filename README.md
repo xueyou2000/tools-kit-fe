@@ -59,3 +59,67 @@ set RUSTUP_UPDATE_ROOT=https://rsproxy.cn/rustup
 cargo clean
 rm -rf %USERPROFILE%\.cargo\.package-cache
 ```
+
+## 证书
+
+1. 生成私钥
+
+```bash
+openssl genrsa -out mykey.key 2048
+```
+
+2. 创建证书签名请求 (CSR)：使用私钥创建一个 CSR 文件
+
+```bash
+openssl req -new -key mykey.key -out mycert.csr
+```
+
+3. 创建证书签名请求 (CSR)：使用私钥创建一个 CSR 文件。
+
+在这一步中，系统会询问你一些信息，如国家、省份、城市、组织名称等。请根据需要填写这些信息，特别是“Common Name”字段，通常设置为你的域名或者应用名。
+
+- 国家：CN
+- 省份：Beijing
+- 城市：Beijing
+- 组织名称：xueyou
+- 组织名称：xueyou
+- 常用名称：MyApp
+- Email Address 可选，直接回车
+- A challenge password 可选，直接回车
+
+```bash
+openssl req -new -key mykey.key -out mycert.csr
+```
+4. 生成自签名证书：使用 CSR 和私钥创建一个自签名证书。
+
+```bash
+openssl x509 -req -days 365 -in mycert.csr -signkey mykey.key -out mycert.crt
+```
+
+5. 转换证书格式：Tauri 和 macOS 可能更倾向于 .p12 格式的证书文件，因此可以将上述生成的 .crt 和 .key 文件合并并转换为 .p12 文件。
+
+> 系统会要求你为这个 .p12 文件设置一个导出密码，请记住这个密码，因为后续配置时可能会用到。
+
+```bash
+openssl pkcs12 -export -out mycert.p12 -inkey mykey.key -in mycert.crt
+```
+6. 导入证书：双击生成的 .p12 文件以将其添加到系统的钥匙串（Keychain Access）中。选择“登录”钥匙串，并确保它被标记为“始终信任”。
+
+7. 配置 Tauri 项目：在 Tauri 项目的 tauri.conf.json 文件中，添加或修改以下配置：
+
+```json
+{
+  "build": {
+    "distDir": "../dist",
+    "devPath": "http://localhost:4000",
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "",
+    "macos": {
+      "signingIdentity": "path/to/your/certificate.p12",
+      "certificatePassword": "your-p12-password",
+      // or 使用环境变量
+      "certificatePassword": "${TAURI_CERTIFICATE_PASSWORD}"
+    }
+  }
+}
+```

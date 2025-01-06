@@ -40,13 +40,7 @@ jobs:
 
       - name: Build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APPLE_CERTIFICATE: ${{ secrets.CERTIFICATE_P12_BASE64 }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: com.xueyou.test
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          APPLE_TEAM_ID: 8H7Z9M7YCK
+          TAURI_CERTIFICATE_PASSWORD: ${{ secrets.TAURI_CERTIFICATE_PASSWORD }}
         run: |
           pnpm tauri build
 
