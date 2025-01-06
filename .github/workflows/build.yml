@@ -13,6 +13,7 @@ jobs:
       matrix:
         platform: [macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
+    environment: APPLE_ID
     permissions: # 添加权限声明
       contents: write
     steps:
