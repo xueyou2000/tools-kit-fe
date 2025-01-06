@@ -1,6 +1,8 @@
 name: Build
 on:
   push:
+    branches:
+      - main
     # 添加 tags 触发器
     tags:
       - "v*"
@@ -41,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_CERTIFICATE: ${{ secrets.CERTIFICATE_P12_BASE64 }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: com.xueyou.tools-kit
+          APPLE_SIGNING_IDENTITY: com.xueyou.test
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: 8H7Z9M7YCK
