@@ -43,26 +43,61 @@ jobs:
         run: |
           pnpm tauri build
 
-      - name: Build on macOS
+      - name: Restore Certificate from Base64
+        if: matrix.platform == 'macos-latest'
+        env:
+          CERTIFICATE_P12_BASE64: ${{ secrets.CERTIFICATE_P12_BASE64 }}
+        run: echo "$CERTIFICATE_P12_BASE64" | base64 --decode > certificate.p12
+
+      - name: Set up keychain for signing
+        if: matrix.platform == 'macos-latest'
+        env:
+          KEYCHAIN_NAME: "build.keychain"
+          KEYCHAIN_PASSWORD: ""
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+        run: |
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          security import certificate.p12 -t agg -k "$KEYCHAIN_NAME" -P "$CERTIFICATE_PASSWORD" -A
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          security default-keychain -s "$KEYCHAIN_NAME"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          security set-keychain-settings -t 3600 -u "$KEYCHAIN_NAME"
+
+      - name: Build and Sign
         if: matrix.platform == 'macos-latest'
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          TAURI_BUNDLE_MACOS_SIGNING_IDENTITY: ${{ secrets.APPLE_ID }}
+          TAURI_BUNDLE_MACOS_STRICT_VERIFY: true
         run: |
-          export APPLE_ID="$APPLE_ID"
-          export APPLE_PASSWORD="$APPLE_ID_PASSWORD"
-          export APPLE_TEAM_ID="$APPLE_TEAM_ID"
+          export TAURI_BUNDLE_MACOS_SIGNING_IDENTITY="$APPLE_ID"
           pnpm tauri build
 
-      # 修复上传构建产物步骤
+      - name: Notarize DMG
+        if: matrix.platform == 'macos-latest'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          NOTARY_PROFILE: xueyou-profile
+        run: |
+          brew update && brew upgrade notarytool || brew install notarytool
+          xcrun notarytool store-credentials "$NOTARY_PROFILE" --apple-id "$APPLE_ID" --password "$APPLE_ID_PASSWORD" --team-id "$APPLE_TEAM_ID"
+          find src-tauri/target/release/bundle/dmg/ -name "*.dmg" -print0 | while IFS= read -r -d '' file; do
+            echo "Submitting ${file} for notarization..."
+            xcrun notarytool submit "${file}" --keychain-profile "$NOTARY_PROFILE"
+            xcrun stapler staple "${file}"
+            echo "Stapling complete for ${file}."
+          done
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform }}
           path: ${{ matrix.platform == 'macos-latest' && 'src-tauri/target/release/bundle/dmg/*.dmg' || 'src-tauri/target/release/bundle/msi/*.msi' }}
 
-      # 添加创建 Release 步骤
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1

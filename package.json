@@ -17,7 +17,8 @@
     "build": "turbo build --log-prefix=none",
     "preview": "turbo preview --log-prefix=none",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "tauri:build:macos": "tauri build --bundles app,dmg"
   },
   "files": [
     "lib",
