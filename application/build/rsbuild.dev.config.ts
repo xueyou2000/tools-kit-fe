@@ -3,7 +3,7 @@ import baseConfig from './rsbuild.base.config'
 
 const config = defineConfig({
   dev: {
-    lazyCompilation: true
+    lazyCompilation: false
   },
   server: {
     host: '0.0.0.0',

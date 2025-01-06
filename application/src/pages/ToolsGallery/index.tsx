@@ -1,6 +1,8 @@
 import { Grid, Card, Heading, Link, Text, Flex, Avatar, Box } from '@radix-ui/themes'
 import { Link as RouterLink } from 'react-router'
 import { ArrowRightIcon } from '@radix-ui/react-icons'
+import { core } from '@tauri-apps/api'
+import { open } from '@tauri-apps/plugin-shell'
 
 import { toolsConfig } from '@/constants/tools-config'
 
@@ -19,6 +21,10 @@ export default function ToolsGallery() {
     el.style.setProperty('--mouse-y', `${y}%`)
   }
 
+  const handleLinkClick = async (url: string) => {
+    open(url)
+  }
+
   return (
     <div className='tools-gallery-page' onMouseMove={handleMouseMove}>
       <Heading size='8' mb='4' className='page-title'>
@@ -27,9 +33,18 @@ export default function ToolsGallery() {
       <Text size='3' mb='6' color='gray' as='div'>
         <div>
           ToolsKit 是一个开源的在线工具集合平台，集成了常用的开发工具、文本处理、格式转换等实用功能。 项目完全开源，欢迎在{' '}
-          <Link href='https://github.com/your-repo/toolskit' target='_blank'>
-            GitHub
-          </Link>{' '}
+          {core.isTauri() ? (
+            <span
+              onClick={() => handleLinkClick('https://github.com/xueyou2000/tools-kit-fe')}
+              style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+            >
+              GitHub
+            </span>
+          ) : (
+            <Link href='https://github.com/xueyou2000/tools-kit-fe' target='_blank'>
+              GitHub
+            </Link>
+          )}
           上查看源码、提出建议或贡献代码。
         </div>
         <div style={{ marginTop: '1rem' }}>主要功能包括：</div>
